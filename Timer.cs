@@ -6,35 +6,37 @@ public class Timer : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _text;
 
-    private bool isRunning = false;
-    private float elapsedTime = 0f;
-    private Coroutine timerCoroutine;
+    private bool _isRunning = false;
+    private Coroutine _timer;
     private float _delay = 0.5f;
+    private float _elapsedTime = 0f;
 
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (isRunning)
+            if (_isRunning)
             {
-                StopCoroutine(timerCoroutine);
-                isRunning = false;
+                StopCoroutine(_timer);
+                _isRunning = false;
             }
             else
             {
-                timerCoroutine = StartCoroutine(TimerController(_delay));
-                isRunning = true;
+                _timer = StartCoroutine(TurnOnTimer(_delay));
+                _isRunning = true;
             }
         }
     }
 
-    private IEnumerator TimerController(float delay)
+    private IEnumerator TurnOnTimer(float delay)
     {
+        var wait = new WaitForSeconds(delay);
+
         while (true)
         {
-            elapsedTime++;
+            _elapsedTime++;
             UpdateTimerText();
-            yield return new WaitForSeconds(delay);
+            yield return wait;
         }
     }
 
@@ -42,7 +44,7 @@ public class Timer : MonoBehaviour
     {
         if (_text != null)
         {
-            _text.text = elapsedTime.ToString("");
+            _text.text = _elapsedTime.ToString("");
         }
     }
 }
